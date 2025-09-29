@@ -14,10 +14,10 @@ public class ServiceApi {
 
     final String API_TOKEN = "YOUR_TOKEN";
 
-    public List<MovieDto> getNowPlayingMovies() {
+    public List<MovieDto> getMoviesByType(String type) {
         try (HttpClient client = HttpClient.newHttpClient()) {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://api.themoviedb.org/3/movie/now_playing"))
+                    .uri(URI.create("https://api.themoviedb.org/3/movie/" + type))
                     .header("Authorization", "Bearer " + API_TOKEN)
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
