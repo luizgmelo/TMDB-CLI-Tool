@@ -1,5 +1,6 @@
 package br.com.luizgmelo.service;
 
+import br.com.luizgmelo.dto.ApiResponseDto;
 import br.com.luizgmelo.dto.MovieDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -13,14 +14,16 @@ public class ServiceApi {
 
     final String API_TOKEN = "YOUR_TOKEN";
 
-    public List<MovieDto> getPlayingMovies() {
+    public List<MovieDto> getNowPlayingMovies() {
         try (HttpClient client = HttpClient.newHttpClient()) {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://api.themoviedb.org/3/movie/now_playing"))
                     .header("Authorization", "Bearer " + API_TOKEN)
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            // TODO mapear a response para ser uma lista de MoviesDto
+            ObjectMapper objectMapper = new ObjectMapper();
+            ApiResponseDto responseDto = objectMapper.readValue(response.body(), ApiResponseDto.class);
+            return responseDto.getResults();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
